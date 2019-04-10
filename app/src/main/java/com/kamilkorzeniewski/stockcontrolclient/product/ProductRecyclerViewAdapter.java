@@ -1,4 +1,4 @@
-package com.kamilkorzeniewski.stockcontrolclient.Product;
+package com.kamilkorzeniewski.stockcontrolclient.product;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kamilkorzeniewski.stockcontrolclient.R;
+import com.kamilkorzeniewski.stockcontrolclient.retrofit.RestApiClient;
 
 import java.util.List;
 
@@ -26,16 +27,22 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter {
     private List<Product> productList;
     private final Context context;
 
-    private final ProductRestApiClient apiClient;
+    private final RestApiClient apiClient;
     ProductRecyclerViewAdapter(Context context, List<Product> initialData) {
         this.context = context;
         productList = initialData;
-        apiClient = ProductRestApiClient.getInstance();
+        apiClient = RestApiClient.getInstance();
     }
 
 
-    void addProduct(Product product) {
-        productList.add(product);
+    void addProducts(List<Product> products){
+        productList.addAll(products);
+        notifyDataSetChanged();
+    }
+
+    void updateProducts(List<Product> products){
+        clearData();
+        addProducts(products);
         notifyDataSetChanged();
     }
 
@@ -109,29 +116,40 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter {
 
         private final MenuItem.OnMenuItemClickListener onMenuItemClickListener = item -> {
             switch (item.getItemId()) {
-                case MENU_EDIT:
-                    Intent intent = new Intent(context,EditProductActivity.class);
-                    intent.putExtra(EditProductActivity.PRODUCT_ID,productId.getText().toString());
-                    context.startActivity(intent);
+                case MENU_EDIT :{
+                    String id = productId.getText().toString();
+                    editMenuClickHandler(Long.parseLong(id));
                     return true;
-                case MENU_DELETE:
-                    Long id = Long.parseLong(productId.getText().toString());
-                    apiClient.removeProduct(id).enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            Toast.makeText(context,"REMOVED",Toast.LENGTH_LONG).show();
-                            productList.remove(position - 1);
-                            notifyItemRemoved(position);
-                        }
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(context,"SOMETHINK GONE WRONG",Toast.LENGTH_LONG).show();
-                        }
-                    });
+                }
+                case MENU_DELETE: {
+                    String id = productId.getText().toString();
+                    deleteMenuClickHandler(Long.parseLong(id));
                     return true;
+                }
             }
             return false;
         };
+
+        private void deleteMenuClickHandler(Long id){
+            apiClient.removeProduct(id).enqueue(new Callback<Void>() {
+                @Override
+                public void onResponse(Call<Void> call, Response<Void> response) {
+                    Toast.makeText(context,"REMOVED",Toast.LENGTH_LONG).show();
+                    productList.remove(position - 1);
+                    notifyItemRemoved(position);
+                }
+                @Override
+                public void onFailure(Call<Void> call, Throwable t) {
+                    Toast.makeText(context,"SOMETHINK GONE WRONG",Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+
+        private void editMenuClickHandler(Long id){
+            Intent intent = new Intent(context,EditProductActivity.class);
+            intent.putExtra(EditProductActivity.PRODUCT_ID,id);
+            context.startActivity(intent);
+        }
 
     }
 

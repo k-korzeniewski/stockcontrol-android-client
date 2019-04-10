@@ -6,4 +6,12 @@
     <string name="fetch_error">Cant fetch data</string>
     <string name="post_item_title_id">ID:</string>
     <string name="post_item_title_name">Name:</string>
+
+    <string name="edit_product_empty_field">null</string>
+    <string name="edit_product_save_button">Save</string>
+    <string name="edit_product_cancel_button">Cancel</string>
+
+
+    <string name="products_fragment_title">Products</string>
+    <string name="add_product_fragment_title">Add Product</string>
 </resources>

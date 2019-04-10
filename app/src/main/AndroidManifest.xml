@@ -22,10 +22,10 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".Product.EditProductActivity">
+        <activity android:name=".product.EditProductActivity">
 
         </activity>
-
+        <activity android:name=".product.AddProductActivity"></activity>
     </application>
 
 </manifest>

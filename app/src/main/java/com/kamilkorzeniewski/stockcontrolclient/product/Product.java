@@ -1,4 +1,4 @@
-package com.kamilkorzeniewski.stockcontrolclient.Product;
+package com.kamilkorzeniewski.stockcontrolclient.product;
 
 public class Product {
 

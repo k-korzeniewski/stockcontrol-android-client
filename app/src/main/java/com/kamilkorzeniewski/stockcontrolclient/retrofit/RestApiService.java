@@ -1,6 +1,6 @@
-package com.kamilkorzeniewski.stockcontrolclient;
+package com.kamilkorzeniewski.stockcontrolclient.retrofit;
 
-import com.kamilkorzeniewski.stockcontrolclient.Product.Product;
+import com.kamilkorzeniewski.stockcontrolclient.product.Product;
 
 import java.util.List;
 

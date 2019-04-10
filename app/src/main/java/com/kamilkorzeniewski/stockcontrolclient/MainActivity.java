@@ -3,7 +3,7 @@ package com.kamilkorzeniewski.stockcontrolclient;
 import android.os.Bundle;
 
 import com.google.android.material.tabs.TabLayout;
-import com.kamilkorzeniewski.stockcontrolclient.Product.ProductsFragment;
+import com.kamilkorzeniewski.stockcontrolclient.product.ProductsFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager.widget.ViewPager;

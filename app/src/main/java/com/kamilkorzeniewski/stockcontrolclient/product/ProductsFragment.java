@@ -1,14 +1,17 @@
-package com.kamilkorzeniewski.stockcontrolclient.Product;
+package com.kamilkorzeniewski.stockcontrolclient.product;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.kamilkorzeniewski.stockcontrolclient.CustomFragment;
 import com.kamilkorzeniewski.stockcontrolclient.R;
+import com.kamilkorzeniewski.stockcontrolclient.retrofit.RestApiClient;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,12 +25,13 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ProductsFragment extends CustomFragment implements SwipeRefreshLayout.OnRefreshListener {
-    private static final String TITLE = "Products";
-    private ProductRestApiClient productRestApiClient;
+    private RestApiClient restApiClient;
     private RecyclerView recyclerView;
     private ProductRecyclerViewAdapter recyclerViewAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private FloatingActionButton floatingActionButton;
 
+    private final static String TITLE = "PRODUCTS";
 
     @Override
     public CustomFragment newInstance() {
@@ -42,9 +46,9 @@ public class ProductsFragment extends CustomFragment implements SwipeRefreshLayo
 
     @Override
     public void onCreate(Bundle saveInstanceState) {
-        productRestApiClient = ProductRestApiClient.getInstance();
-        recyclerViewAdapter = new ProductRecyclerViewAdapter(getContext(), new ArrayList<>());
         super.onCreate(saveInstanceState);
+        restApiClient = RestApiClient.getInstance();
+        recyclerViewAdapter = new ProductRecyclerViewAdapter(getContext(), new ArrayList<>());
 
     }
 
@@ -56,19 +60,20 @@ public class ProductsFragment extends CustomFragment implements SwipeRefreshLayo
         recyclerView.setAdapter(recyclerViewAdapter);
         swipeRefreshLayout = view.findViewById(R.id.swipe_container);
         swipeRefreshLayout.setOnRefreshListener(this);
+        floatingActionButton = view.findViewById(R.id.fab);
+        floatingActionButton.setOnClickListener(e -> {
+            startActivity(new Intent(getContext(), AddProductActivity.class));
+        });
         loadData();
         return view;
     }
 
     private void loadData() {
-        productRestApiClient.getAllProducts().enqueue(new Callback<List<Product>>() {
+        restApiClient.getAllProducts().enqueue(new Callback<List<Product>>() {
             @Override
             public void onResponse(Call<List<Product>> call, Response<List<Product>> response) {
                 List<Product> products = response.body();
-                recyclerViewAdapter.clearData();
-                for (Product p : products) {
-                    recyclerViewAdapter.addProduct(p);
-                }
+                recyclerViewAdapter.updateProducts(products);
             }
 
             @Override

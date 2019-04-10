@@ -1,15 +1,15 @@
-package com.kamilkorzeniewski.stockcontrolclient.Product;
+package com.kamilkorzeniewski.stockcontrolclient.product;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.kamilkorzeniewski.stockcontrolclient.R;
+import com.kamilkorzeniewski.stockcontrolclient.retrofit.RestApiClient;
 
 import androidx.annotation.Nullable;
 import okhttp3.ResponseBody;
@@ -20,7 +20,7 @@ import retrofit2.Response;
 public class EditProductActivity extends Activity {
 
     final static String PRODUCT_ID = "productId";
-    private final static ProductRestApiClient api = ProductRestApiClient.getInstance();
+    private final static RestApiClient api = RestApiClient.getInstance();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -28,7 +28,7 @@ public class EditProductActivity extends Activity {
         setContentView(R.layout.edit_product);
 
         Intent intent = getIntent();
-        String id = intent.getStringExtra(PRODUCT_ID);
+        Long id = intent.getLongExtra(PRODUCT_ID,-1L);
 
         TextView textView = findViewById(R.id.edit_product_id);
         EditText productName = findViewById(R.id.edit_product_name);
@@ -37,11 +37,11 @@ public class EditProductActivity extends Activity {
         Button saveButton = findViewById(R.id.edit_product_save_button);
         Button cancelButton = findViewById(R.id.edit_product_cancel_button);
 
-        api.getProduct(Long.parseLong(id)).enqueue(new Callback<Product>() {
+        api.getProduct(id).enqueue(new Callback<Product>() {
             @Override
             public void onResponse(Call<Product> call, Response<Product> response) {
                 Product product = response.body();
-                textView.setText(id);
+                textView.setText(id.toString());
                 productName.setText(product.name);
                 productQuantity.setText(Integer.toString(product.quantity));
                 productPrice.setText(Float.toString(product.price));
@@ -57,16 +57,15 @@ public class EditProductActivity extends Activity {
             String name = productName.getText().toString();
             int quantity = Integer.parseInt(productQuantity.getText().toString());
             float price = Float.parseFloat(productPrice.getText().toString());
-            Product product = new Product(Long.parseLong(id),name,quantity,"",price);
+            Product product = new Product(id,name,quantity,"",price);
             api.putProduct(product,product.id).enqueue(new Callback<ResponseBody>() {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                    Toast.makeText(getApplicationContext(),"Saved",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Saved !",Toast.LENGTH_LONG).show();
                 }
-
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Toast.makeText(getApplicationContext(),"Failed !",Toast.LENGTH_LONG);
+                    Toast.makeText(getApplicationContext(),"Failed !",Toast.LENGTH_LONG).show();
                 }
             });
 

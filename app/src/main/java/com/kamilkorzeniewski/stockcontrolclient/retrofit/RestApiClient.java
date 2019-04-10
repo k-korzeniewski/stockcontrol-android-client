@@ -1,6 +1,6 @@
-package com.kamilkorzeniewski.stockcontrolclient.Product;
+package com.kamilkorzeniewski.stockcontrolclient.retrofit;
 
-import com.kamilkorzeniewski.stockcontrolclient.RestApiService;
+import com.kamilkorzeniewski.stockcontrolclient.product.Product;
 
 import java.util.List;
 
@@ -9,17 +9,17 @@ import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class ProductRestApiClient {
+public class RestApiClient {
     private RestApiService restApiService;
-    private static ProductRestApiClient instance;
+    private static RestApiClient instance;
 
-    static ProductRestApiClient getInstance() {
+    public static RestApiClient getInstance() {
         if (instance == null)
-            instance = new ProductRestApiClient();
+            instance = new RestApiClient();
         return instance;
     }
 
-    private ProductRestApiClient() {
+    private RestApiClient() {
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("http://192.168.1.19:8080/")
                 .addConverterFactory(GsonConverterFactory.create());
@@ -28,17 +28,19 @@ public class ProductRestApiClient {
         restApiService = retrofit.create(RestApiService.class);
     }
 
-    Call<List<Product>> getAllProducts() {
+    public Call<List<Product>> getAllProducts() {
         return restApiService.getAllProducts();
     }
-    Call<Void> removeProduct(Long productId){
+
+    public Call<Void> removeProduct(Long productId) {
         return restApiService.removeProduct(productId);
     }
-    Call<Product> getProduct(Long productId){
+
+    public Call<Product> getProduct(Long productId) {
         return restApiService.getProductById(productId);
     }
 
-    Call<ResponseBody> putProduct(Product product, Long productId){
-        return restApiService.putProduct(product,productId);
+    public Call<ResponseBody> putProduct(Product product, Long productId) {
+        return restApiService.putProduct(product, productId);
     }
 }
