@@ -25,7 +25,7 @@ public class EditProductActivity extends Activity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.edit_product);
+        setContentView(R.layout.activity_edit_product);
 
         Intent intent = getIntent();
         Long id = intent.getLongExtra(PRODUCT_ID,-1L);

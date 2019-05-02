@@ -55,10 +55,10 @@ public class ProductRecyclerViewAdapter extends RecyclerView.Adapter {
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         if (i == TitleItem.VIEW_TYPE) {
-            View view = inflater.inflate(R.layout.post_item_title, viewGroup, false);
+            View view = inflater.inflate(R.layout.item_post_title, viewGroup, false);
             return new TitleItem(view);
         }
-        View view = inflater.inflate(R.layout.post_item, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_post, viewGroup, false);
         return new ItemHolder(view);
     }
 

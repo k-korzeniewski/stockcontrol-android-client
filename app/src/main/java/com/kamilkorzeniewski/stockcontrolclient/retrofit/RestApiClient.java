@@ -1,6 +1,9 @@
 package com.kamilkorzeniewski.stockcontrolclient.retrofit;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.kamilkorzeniewski.stockcontrolclient.product.Product;
+import com.kamilkorzeniewski.stockcontrolclient.security.AuthModel;
 
 import java.util.List;
 
@@ -20,9 +23,12 @@ public class RestApiClient {
     }
 
     private RestApiClient() {
+        Gson gson = new GsonBuilder()
+                .setLenient()
+                .create();
         Retrofit.Builder builder = new Retrofit.Builder()
                 .baseUrl("http://192.168.1.19:8080/")
-                .addConverterFactory(GsonConverterFactory.create());
+                .addConverterFactory(GsonConverterFactory.create(gson));
 
         Retrofit retrofit = builder.build();
         restApiService = retrofit.create(RestApiService.class);
@@ -42,5 +48,13 @@ public class RestApiClient {
 
     public Call<ResponseBody> putProduct(Product product, Long productId) {
         return restApiService.putProduct(product, productId);
+    }
+
+    public Call<ResponseBody> addProduct(Product product){
+        return restApiService.postProduct(product);
+    }
+
+    public Call<String> login(AuthModel authModel){
+        return restApiService.login(authModel);
     }
 }

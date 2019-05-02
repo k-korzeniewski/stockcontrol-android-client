@@ -1,6 +1,7 @@
 package com.kamilkorzeniewski.stockcontrolclient.retrofit;
 
 import com.kamilkorzeniewski.stockcontrolclient.product.Product;
+import com.kamilkorzeniewski.stockcontrolclient.security.AuthModel;
 
 import java.util.List;
 
@@ -9,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
@@ -24,4 +26,10 @@ public interface RestApiService {
 
     @PUT("product/{id}")
     Call<ResponseBody> putProduct(@Body Product product, @Path("id")Long id);
+
+    @POST("product/")
+    Call<ResponseBody> postProduct(@Body Product product);
+
+    @POST("login/")
+    Call<String> login(@Body AuthModel authModel);
 }
